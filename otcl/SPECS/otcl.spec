@@ -25,18 +25,23 @@ OTcl, short for MIT Object Tcl, is an extension to Tcl/Tk for object-oriented pr
 %patch0 -p1
 
 %build
-%configure -prefix=%{buildroot}/usr
+%configure --prefix=%{buildroot}/usr
 %make_build -j1
 
 %install
 %make_install
+if test "%{_arch}" == x86_64; then
+	install -Dm755 %{buildroot}/usr/lib/libotcl.a %{buildroot}/%{_libdir}/libotcl.a
+	install -Dm755 %{buildroot}/usr/lib/libotcl.so %{buildroot}/%{_libdir}/libotcl.so
+	rm %{buildroot}/usr/lib/libotcl.a %{buildroot}/usr/lib/libotcl.so
+fi
 
 %files
 %{_bindir}/otclsh
 %{_bindir}/owish
 %{_includedir}/otcl.h
-%{_prefix}/lib/libotcl.a
-%{_prefix}/lib/libotcl.so
+%{_libdir}/libotcl.a
+%{_libdir}/libotcl.so
 
 %changelog
 * Wed May 03 2017 - 1.14-1
